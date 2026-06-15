@@ -5,22 +5,21 @@ Lớp bảo vệ đơn giản nhất: kiểm tra header X-API-Key.
 Phù hợp cho: internal API, B2B, MVP.
 
 Chạy:
-    AGENT_API_KEY=my-secret-key python app.py
+    python app.py
+    (tự động load từ .env file)
 
 Test:
     # Có key → 200
-    curl -H "X-API-Key: my-secret-key" -X POST \\
-         -H "Content-Type: application/json" \\
-         -d '{"question":"hello"}' \\
-         http://localhost:8000/ask
+    curl -H "X-API-Key: longcris" -X POST \\
+         "http://localhost:8000/ask?question=hello"
 
     # Không có key → 401
-    curl -X POST -H "Content-Type: application/json" \\
-         -d '{"question":"hello"}' \\
-         http://localhost:8000/ask
+    curl -X POST "http://localhost:8000/ask?question=hello"
 """
 import os
+from dotenv import load_dotenv
 
+load_dotenv()  # Load từ .env file
 
 from fastapi import FastAPI, HTTPException, Security, Depends
 from fastapi.security.api_key import APIKeyHeader
